@@ -1,0 +1,81 @@
+/* Reusable dashed arrow — continuous motion when .how-flow-arrow--on */
+
+.how-flow-arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0 6px;
+  color: rgba(129, 140, 248, 0.95);
+}
+
+.how-flow-arrow--row {
+  flex-direction: row;
+  gap: 8px;
+}
+
+.how-flow-arrow__svg {
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.how-flow-arrow__svg--h {
+  width: min(80px, 16vw);
+  height: 34px;
+}
+
+.how-flow-arrow__svg--v {
+  width: 34px;
+  height: min(72px, 14vw);
+}
+
+.how-flow-arrow__path {
+  stroke-width: 2.35;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 5 9;
+  stroke-dashoffset: 0;
+}
+
+.how-flow-arrow--on .how-flow-arrow__path {
+  animation: how-flow-arrow-dash 1.05s linear infinite;
+}
+
+@keyframes how-flow-arrow-dash {
+  to {
+    stroke-dashoffset: -42;
+  }
+}
+
+.how-flow-arrow__caption {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(196, 200, 255, 0.88);
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .how-flow-arrow--on .how-flow-arrow__path {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .how-flow-arrow:not(.how-flow-arrow--row) {
+    flex-direction: row;
+    padding: 6px 0;
+  }
+
+  .how-flow-arrow:not(.how-flow-arrow--row) .how-flow-arrow__svg--h {
+    width: min(100px, 40vw);
+    transform: rotate(90deg);
+  }
+}

@@ -1,0 +1,92 @@
+/* Vector icon fonts (react-native-vector-icons uses these family names on web). */
+@font-face {
+  font-family: 'Ionicons';
+  src: url('../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'MaterialCommunityIcons';
+  src: url('../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf')
+    format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+/* App Router: there is no #__next; body is the scroll/layout root. */
+body.tap-it-body {
+  margin: 0;
+  min-height: 100%;
+  min-height: 100dvh;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* Next may inject siblings; let the main RN tree fill remaining space. */
+  align-items: stretch;
+  background-color: #0f0f12;
+  color: #e4e4e7;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+/* Flex column so react-native-web screens with flex:1 fill the viewport. */
+#tap-it-root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+#tap-it-root > * {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Web inputs from RN TextInput: match app typography and visible focus. */
+#tap-it-root input,
+#tap-it-root textarea {
+  font: inherit;
+}
+
+#tap-it-root input:focus-visible,
+#tap-it-root textarea:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.45);
+  outline-offset: 1px;
+}
+
+/* Pressables / touchables on web */
+#tap-it-root [role='button'],
+#tap-it-root [data-focusable='true'] {
+  cursor: pointer;
+}
+
+#tap-it-root [role='button']:disabled {
+  cursor: not-allowed;
+}

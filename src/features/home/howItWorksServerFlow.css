@@ -1,0 +1,154 @@
+/* Step “link → our server” — URLs + shared animated arrow + server rack */
+
+.how-server-flow {
+  margin-top: 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(145deg, rgba(14, 16, 30, 0.95) 0%, rgba(8, 10, 22, 0.9) 100%);
+  padding: 18px 16px 16px;
+  box-shadow:
+    0 0 0 1px rgba(99, 102, 241, 0.07),
+    0 16px 44px rgba(0, 0, 0, 0.32);
+}
+
+.how-server-flow__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 10px 12px;
+  align-items: center;
+}
+
+.how-server-flow__label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(161, 161, 170, 0.95);
+  margin-bottom: 8px;
+}
+
+.how-server-flow__url-card {
+  border-radius: 12px;
+  border: 1px solid rgba(129, 140, 248, 0.22);
+  background: rgba(99, 102, 241, 0.08);
+  padding: 12px 14px;
+  min-height: 3.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.how-server-flow__url-text {
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    'SF Mono',
+    Menlo,
+    Consolas,
+    monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  word-break: break-all;
+  color: #e4e4e7;
+  margin: 0;
+}
+
+.how-server-flow__url-text--enter {
+  animation: how-server-flow-url-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes how-server-flow-url-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.how-server-flow__server-card {
+  border-radius: 12px;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  background: rgba(16, 185, 129, 0.08);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.how-server-flow__server-title {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(52, 211, 129, 0.95);
+  margin: 0;
+}
+
+.how-server-flow__server-svg {
+  width: 56px;
+  height: 52px;
+  color: rgba(167, 243, 208, 0.95);
+}
+
+.how-server-flow__server-svg .led {
+  animation: how-server-flow-led 1.2s ease-in-out infinite;
+}
+
+.how-server-flow__server-svg .led--2 {
+  animation-delay: 0.35s;
+}
+
+.how-server-flow__server-svg .led--3 {
+  animation-delay: 0.7s;
+}
+
+@keyframes how-server-flow-led {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.how-server-flow__hint {
+  margin: 14px 0 0;
+  font-size: 11px;
+  color: #71717a;
+  text-align: center;
+  line-height: 1.45;
+}
+
+.how-server-flow__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .how-server-flow__url-text--enter {
+    animation: none;
+  }
+
+  .how-server-flow__server-svg .led {
+    animation: none;
+    opacity: 0.85;
+  }
+}
+
+@media (max-width: 640px) {
+  .how-server-flow__grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
