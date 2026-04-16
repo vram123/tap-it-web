@@ -5,7 +5,7 @@ import { MOCK_FRIENDS } from '@/constants/mockProfileData';
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
 import { ProfileIdentityFields } from '@/features/profile/ProfileIdentityFields';
 import { useUserProfile } from '@/features/profile/UserProfileContext';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { router, useLocalSearchParams } from '@/lib/expo-router';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

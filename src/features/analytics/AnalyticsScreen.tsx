@@ -11,7 +11,7 @@ import type { AppThemeColors, ColorMode } from '@/features/profile/profileTypes'
 import { useUserProfile } from '@/features/profile/UserProfileContext';
 import type { MainTabKey } from '@/i18n/ui/types';
 import { mainTabIsActive } from '@/navigation/mainTabNav';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { router, useLocalSearchParams, usePathname, useSegments } from '@/lib/expo-router';
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -258,6 +258,47 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
     tabLabel: { fontSize: 10, color: c.muted, fontWeight: '500' },
     tabLabelActive: { color: c.text, fontWeight: '700' },
     pageInner: { paddingHorizontal: 20 },
+    emptyStateCard: {
+      backgroundColor: c.surface,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: c.border,
+      padding: 20,
+      gap: 12,
+    },
+    emptyStateIcon: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: colorMode === 'light' ? '#eef2ff' : 'rgba(129, 140, 248, 0.16)',
+    },
+    emptyStateTitle: { fontSize: 18, fontWeight: '800', color: c.text },
+    emptyStateBody: { fontSize: 14, color: c.muted, lineHeight: 20 },
+    emptyStateCtaRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 4 },
+    emptyStatePrimaryCta: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      backgroundColor: c.accent,
+      borderRadius: 10,
+      paddingVertical: 11,
+      paddingHorizontal: 14,
+    },
+    emptyStatePrimaryCtaText: { fontSize: 14, fontWeight: '700', color: c.onAccent },
+    emptyStateSecondaryCta: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      backgroundColor: c.surface2,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: c.border,
+      paddingVertical: 11,
+      paddingHorizontal: 14,
+    },
+    emptyStateSecondaryCtaText: { fontSize: 14, fontWeight: '700', color: c.text },
   });
 }
 
@@ -270,7 +311,7 @@ export default function AnalyticsScreen() {
   const isGuest = guestRaw === '1' || guestRaw === 'true' || guestRaw === 'yes';
 
   const { u } = useAppPreferences();
-  const { profile, colors } = useUserProfile();
+  const { profile, colors, myCards } = useUserProfile();
   const [period, setPeriod] = useState<AnalyticsPeriod>('week');
 
   const periods = useMemo(
@@ -297,6 +338,12 @@ export default function AnalyticsScreen() {
 
   const goHome = () => {
     router.replace({ pathname: '/home', params: journeyParams });
+  };
+  const goCreateCard = () => {
+    router.push({ pathname: '/card-journey', params: journeyParams });
+  };
+  const goShop = () => {
+    router.push({ pathname: '/shop', params: journeyParams });
   };
 
   const onTabPress = (key: MainTabKey) => {
@@ -390,92 +437,120 @@ export default function AnalyticsScreen() {
           <Text style={styles.title}>{u.analytics.title}</Text>
           <Text style={styles.subtitle}>{u.analytics.subtitle}</Text>
 
-          <View style={styles.periodRow}>
-            {periods.map((p) => {
-              const on = period === p.id;
-              return (
+          {myCards.length === 0 ? (
+            <View style={styles.emptyStateCard}>
+              <View style={styles.emptyStateIcon}>
+                <Ionicons name="stats-chart-outline" size={24} color={colors.accent} />
+              </View>
+              <Text style={styles.emptyStateTitle}>{u.analytics.noCardsTitle}</Text>
+              <Text style={styles.emptyStateBody}>{u.analytics.noCardsBody}</Text>
+              <View style={styles.emptyStateCtaRow}>
                 <Pressable
-                  key={p.id}
-                  onPress={() => setPeriod(p.id)}
-                  style={[styles.periodPill, on && styles.periodPillOn]}
+                  style={({ pressed }) => [styles.emptyStatePrimaryCta, pressed && { opacity: 0.9 }]}
+                  onPress={goCreateCard}
                 >
-                  <Text style={[styles.periodPillText, on && styles.periodPillTextOn]}>{p.label}</Text>
+                  <Ionicons name="add-circle-outline" size={18} color={colors.onAccent} />
+                  <Text style={styles.emptyStatePrimaryCtaText}>{u.analytics.addCardCta}</Text>
                 </Pressable>
-              );
-            })}
-          </View>
-
-          <View style={styles.heroCard}>
-            <Text style={styles.heroLabel}>{u.analytics.totalTaps}</Text>
-            <Text style={styles.heroValue}>{bundle.totalTaps.toLocaleString()}</Text>
-            <View style={styles.heroMeta}>
-              <Text style={styles.heroRange}>{rangeLabel}</Text>
-              <View
-                style={[
-                  styles.changePill,
-                  bundle.changeDirection === 'up' ? styles.changeUp : styles.changeDown,
-                ]}
-              >
-                <Ionicons
-                  name={bundle.changeDirection === 'up' ? 'trending-up' : 'trending-down'}
-                  size={16}
-                  color={bundle.changeDirection === 'up' ? colors.accent : '#f87171'}
-                />
-                <Text
-                  style={[
-                    styles.changeText,
-                    bundle.changeDirection === 'up' ? styles.changeUpText : styles.changeDownText,
-                  ]}
+                <Pressable
+                  style={({ pressed }) => [styles.emptyStateSecondaryCta, pressed && { opacity: 0.9 }]}
+                  onPress={goShop}
                 >
-                  {bundle.changeDirection === 'up' ? '+' : '-'}
-                  {Math.abs(bundle.changePct)}
-                  {u.analytics.changeVsPrior} {priorWord}
-                </Text>
+                  <Ionicons name="bag-outline" size={18} color={colors.text} />
+                  <Text style={styles.emptyStateSecondaryCtaText}>{u.analytics.continueShoppingCta}</Text>
+                </Pressable>
               </View>
             </View>
-          </View>
+          ) : (
+            <>
+              <View style={styles.periodRow}>
+                {periods.map((p) => {
+                  const on = period === p.id;
+                  return (
+                    <Pressable
+                      key={p.id}
+                      onPress={() => setPeriod(p.id)}
+                      style={[styles.periodPill, on && styles.periodPillOn]}
+                    >
+                      <Text style={[styles.periodPillText, on && styles.periodPillTextOn]}>{p.label}</Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
 
-          <View style={styles.statRow}>
-            <View style={styles.statMini}>
-              <Text style={styles.statMiniLabel}>{peakLabelUi}</Text>
-              <Text style={styles.statMiniValue}>{bundle.peakValue.toLocaleString()}</Text>
-              <Text style={styles.statMiniSub}>{u.analytics.tapsSuffix}</Text>
-            </View>
-            <View style={styles.statMini}>
-              <Text style={styles.statMiniLabel}>{avgLabelUi}</Text>
-              <Text style={styles.statMiniValue} numberOfLines={2}>
-                {bundle.avgValue}
-              </Text>
-            </View>
-          </View>
+              <View style={styles.heroCard}>
+                <Text style={styles.heroLabel}>{u.analytics.totalTaps}</Text>
+                <Text style={styles.heroValue}>{bundle.totalTaps.toLocaleString()}</Text>
+                <View style={styles.heroMeta}>
+                  <Text style={styles.heroRange}>{rangeLabel}</Text>
+                  <View
+                    style={[
+                      styles.changePill,
+                      bundle.changeDirection === 'up' ? styles.changeUp : styles.changeDown,
+                    ]}
+                  >
+                    <Ionicons
+                      name={bundle.changeDirection === 'up' ? 'trending-up' : 'trending-down'}
+                      size={16}
+                      color={bundle.changeDirection === 'up' ? colors.accent : '#f87171'}
+                    />
+                    <Text
+                      style={[
+                        styles.changeText,
+                        bundle.changeDirection === 'up' ? styles.changeUpText : styles.changeDownText,
+                      ]}
+                    >
+                      {bundle.changeDirection === 'up' ? '+' : '-'}
+                      {Math.abs(bundle.changePct)}
+                      {u.analytics.changeVsPrior} {priorWord}
+                    </Text>
+                  </View>
+                </View>
+              </View>
 
-          <View style={styles.chartCard}>
-            <Text style={styles.chartTitle}>{primaryTitle}</Text>
-            <Text style={styles.chartHint}>{u.analytics.chartHintPrimary}</Text>
-            <TapBarChart
-              points={bundle.primarySeries}
-              maxHeight={168}
-              barColor={colors.accent}
-              mutedColor={colors.muted}
-              scroll={primaryScroll}
-              barWidth={9}
-              emptyRangeLabel={u.analytics.emptyRange}
-            />
-          </View>
+              <View style={styles.statRow}>
+                <View style={styles.statMini}>
+                  <Text style={styles.statMiniLabel}>{peakLabelUi}</Text>
+                  <Text style={styles.statMiniValue}>{bundle.peakValue.toLocaleString()}</Text>
+                  <Text style={styles.statMiniSub}>{u.analytics.tapsSuffix}</Text>
+                </View>
+                <View style={styles.statMini}>
+                  <Text style={styles.statMiniLabel}>{avgLabelUi}</Text>
+                  <Text style={styles.statMiniValue} numberOfLines={2}>
+                    {bundle.avgValue}
+                  </Text>
+                </View>
+              </View>
 
-          <View style={styles.chartCard}>
-            <Text style={styles.chartTitle}>{secondaryTitleUi}</Text>
-            <Text style={styles.chartHint}>{u.analytics.chartHintSecondary}</Text>
-            <TapBarChart
-              points={bundle.secondarySeries}
-              maxHeight={120}
-              barColor={profile.colorMode === 'light' ? '#6366f1' : '#818cf8'}
-              mutedColor={colors.muted}
-              scroll={bundle.secondarySeries.length > 8}
-              barWidth={12}
-              emptyRangeLabel={u.analytics.emptyRange}
-            />
-          </View>
+              <View style={styles.chartCard}>
+                <Text style={styles.chartTitle}>{primaryTitle}</Text>
+                <Text style={styles.chartHint}>{u.analytics.chartHintPrimary}</Text>
+                <TapBarChart
+                  points={bundle.primarySeries}
+                  maxHeight={168}
+                  barColor={colors.accent}
+                  mutedColor={colors.muted}
+                  scroll={primaryScroll}
+                  barWidth={9}
+                  emptyRangeLabel={u.analytics.emptyRange}
+                />
+              </View>
+
+              <View style={styles.chartCard}>
+                <Text style={styles.chartTitle}>{secondaryTitleUi}</Text>
+                <Text style={styles.chartHint}>{u.analytics.chartHintSecondary}</Text>
+                <TapBarChart
+                  points={bundle.secondarySeries}
+                  maxHeight={120}
+                  barColor={profile.colorMode === 'light' ? '#6366f1' : '#818cf8'}
+                  mutedColor={colors.muted}
+                  scroll={bundle.secondarySeries.length > 8}
+                  barWidth={12}
+                  emptyRangeLabel={u.analytics.emptyRange}
+                />
+              </View>
+            </>
+          )}
         </PageContainer>
       </ScrollView>
 

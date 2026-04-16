@@ -1,7 +1,10 @@
 /* Vector icon fonts (react-native-vector-icons uses these family names on web). */
 @font-face {
   font-family: 'Ionicons';
-  src: url('../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf') format('truetype');
+  src:
+    url('../../node_modules/@react-native-vector-icons/ionicons/fonts/Ionicons.ttf')
+      format('truetype'),
+    url('../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: block;

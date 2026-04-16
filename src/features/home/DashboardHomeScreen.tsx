@@ -13,7 +13,7 @@ import { useAppPreferences } from '@/features/appPreferences/AppPreferencesConte
 import type { AppThemeColors, ColorMode, UserNfcCard } from '@/features/profile/profileTypes';
 import { useUserProfile } from '@/features/profile/UserProfileContext';
 import type { MainTabKey } from '@/i18n/ui/types';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { mainTabIsActive } from '@/navigation/mainTabNav';
 import { router, useLocalSearchParams, usePathname, useSegments } from '@/lib/expo-router';
 import React, { useEffect, useMemo, useRef, useState } from 'react';

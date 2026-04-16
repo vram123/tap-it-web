@@ -5,7 +5,7 @@ import { SettingsSubpageHeader } from '@/components/SettingsSubpageHeader';
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
 import { useUserProfile } from '@/features/profile/UserProfileContext';
 import { APP_LOCALE_OPTIONS, type AppLocale } from '@/i18n/appLocales';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';

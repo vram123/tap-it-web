@@ -6,7 +6,7 @@ import type { AppThemeColors, ColorMode, UserNfcCard } from '@/features/profile/
 import { useUserProfile } from '@/features/profile/UserProfileContext';
 import type { MainTabKey } from '@/i18n/ui/types';
 import { mainTabIsActive } from '@/navigation/mainTabNav';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { router, useFocusEffect, useLocalSearchParams, usePathname, useSegments } from '@/lib/expo-router';
 import React, { useCallback, useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

@@ -10,7 +10,7 @@ import { SECURITY_QUESTIONS } from '@/constants/securityQuestions';
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
 import { ProfileIdentityFields } from '@/features/profile/ProfileIdentityFields';
 import { useUserProfile } from '@/features/profile/UserProfileContext';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { router } from '@/lib/expo-router';
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';

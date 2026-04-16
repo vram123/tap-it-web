@@ -5,7 +5,7 @@ import { SettingsSubpageHeader } from '@/components/SettingsSubpageHeader';
 import { HELP_CENTER_URL, SUPPORT_EMAIL } from '@/constants/legalLinks';
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
 import { useUserProfile } from '@/features/profile/UserProfileContext';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { Linking } from 'react-native';
 import React from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text } from 'react-native';

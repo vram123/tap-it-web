@@ -1,7 +1,7 @@
 'use client';
 
 import * as Haptics from 'expo-haptics';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import React, { useMemo } from 'react';
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';

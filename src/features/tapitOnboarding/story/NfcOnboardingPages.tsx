@@ -1,7 +1,7 @@
 'use client';
 
 import * as Haptics from 'expo-haptics';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {

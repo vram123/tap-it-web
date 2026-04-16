@@ -127,6 +127,10 @@ export type UiStrings = {
     backLabel: string;
     title: string;
     subtitle: string;
+    noCardsTitle: string;
+    noCardsBody: string;
+    addCardCta: string;
+    continueShoppingCta: string;
     periodDay: string;
     periodWeek: string;
     periodMonth: string;

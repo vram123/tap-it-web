@@ -2,7 +2,7 @@
 
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
 import { router } from '@/lib/expo-router';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import React, { useMemo } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 

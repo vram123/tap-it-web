@@ -2,7 +2,7 @@
 
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
 import { useUserProfileOptional } from '@/features/profile/UserProfileContext';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import * as Haptics from 'expo-haptics';
 import { router, useLocalSearchParams } from '@/lib/expo-router';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';

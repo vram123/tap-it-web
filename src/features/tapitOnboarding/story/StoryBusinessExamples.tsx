@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Animated, {
   Easing,

@@ -12,7 +12,7 @@ import { BIO_MAX_WORDS, countWords, type UserProfileState } from '@/features/pro
 import { useUserProfile } from '@/features/profile/UserProfileContext';
 import { formatUiString } from '@/i18n/ui/formatUiString';
 import { setPendingNfcDestination } from '@/features/tapitOnboarding/pendingNfcDestination';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { router, useLocalSearchParams } from '@/lib/expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {

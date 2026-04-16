@@ -6,7 +6,7 @@ import type { AppThemeColors } from '@/features/profile/profileTypes';
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
 import { clearAccessToken } from '@/features/auth/session';
 import { useUserProfile } from '@/features/profile/UserProfileContext';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { router } from '@/lib/expo-router';
 import React from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
