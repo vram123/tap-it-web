@@ -87,6 +87,23 @@ export default function AccountSettingsScreen() {
     );
   };
 
+  const triggerCardKillSwitch = () => {
+    Alert.alert(
+      'Lost card kill switch',
+      'This immediately disables Tap actions for your card while you recover it (demo only).',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Disable card now',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert('Card disabled', 'Your card has been placed in a blocked state.');
+          },
+        },
+      ],
+    );
+  };
+
   return (
     <SafeAreaView style={[styles.root, { backgroundColor: colors.bg }]} edges={['bottom']}>
       <SettingsSubpageHeader title={s.account} />
@@ -260,6 +277,16 @@ export default function AccountSettingsScreen() {
           ]}
         >
           <Text style={styles.deleteText}>Delete account</Text>
+        </Pressable>
+        <Pressable
+          onPress={triggerCardKillSwitch}
+          style={({ pressed }) => [
+            styles.dangerBtn,
+            { borderColor: 'rgba(248,113,113,0.5)', backgroundColor: 'rgba(248,113,113,0.08)' },
+            pressed && { opacity: 0.85 },
+          ]}
+        >
+          <Text style={styles.deleteText}>Lost card? Kill switch</Text>
         </Pressable>
           </PageContainer>
         </ScrollView>

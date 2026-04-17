@@ -1,6 +1,7 @@
 'use client';
 
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
+import { scaleText } from '@/features/appPreferences/textSize';
 import { useUserProfileOptional } from '@/features/profile/UserProfileContext';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import * as Haptics from 'expo-haptics';
@@ -19,16 +20,11 @@ import {
   View,
 } from 'react-native';
 import Animated, {
-  Easing,
   Extrapolation,
-  cancelAnimation,
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -58,77 +54,6 @@ type TapitHomeScreenProps = {
 };
 
 type PageRow = { key: TapitTab };
-
-function SwipeForNextHint({
-  visible,
-  T,
-  swipeForNext,
-}: {
-  visible: boolean;
-  T: TapitPalette;
-  swipeForNext: string;
-}) {
-  const nudge = useSharedValue(0);
-
-  useEffect(() => {
-    if (!visible) {
-      cancelAnimation(nudge);
-      nudge.value = 0;
-      return;
-    }
-    nudge.value = withRepeat(
-      withSequence(
-        withTiming(12, { duration: 650, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0, { duration: 650, easing: Easing.inOut(Easing.ease) }),
-      ),
-      -1,
-      false,
-    );
-    return () => {
-      cancelAnimation(nudge);
-    };
-  }, [visible, nudge]);
-
-  const chevronsStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: nudge.value }],
-  }));
-
-  if (!visible) {
-    return null;
-  }
-
-  return (
-    <View style={swipeHintStyles.row} pointerEvents="none">
-      <Text style={[swipeHintStyles.label, { color: T.muted }]}>{swipeForNext}</Text>
-      <Animated.View style={[swipeHintStyles.chevrons, chevronsStyle]}>
-        <Ionicons name="chevron-forward" size={15} color={T.muted} />
-        <Ionicons name="chevron-forward" size={15} color={T.muted} style={{ marginLeft: -11 }} />
-      </Animated.View>
-    </View>
-  );
-}
-
-const swipeHintStyles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingTop: 4,
-    paddingBottom: 2,
-  },
-  label: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.4,
-    textTransform: 'lowercase',
-  },
-  chevrons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    opacity: 0.9,
-  },
-});
 
 function PagerPage({
   children,
@@ -161,10 +86,12 @@ function PagerPage({
 }
 
 function TapitHomeScreenInner({ showExitToDashboard = false, onExitToDashboard }: TapitHomeScreenProps) {
-  const { u } = useAppPreferences();
+  const { u, preferences } = useAppPreferences();
   const T = useTapitOnboardingTheme();
   const insets = useSafeAreaInsets();
   const { width: pageWidth } = useWindowDimensions();
+  const isDesktopWeb = Platform.OS === 'web' && pageWidth >= 1024;
+  const frameWidth = isDesktopWeb ? Math.min(pageWidth - 64, 1200) : pageWidth;
   const params = useLocalSearchParams<{ displayName?: string | string[]; guest?: string | string[] }>();
   const [activeTab, setActiveTab] = useState<TapitTab>('link');
   const scrollX = useSharedValue(0);
@@ -176,11 +103,33 @@ function TapitHomeScreenInner({ showExitToDashboard = false, onExitToDashboard }
   const data = useMemo<PageRow[]>(() => TAPIT_TABS.map((tab) => ({ key: tab })), []);
 
   const styles = useMemo(
-    () =>
-      StyleSheet.create({
+    () => {
+      const s = (size: number) => scaleText(size, preferences.textSizeLevel);
+      return StyleSheet.create({
         root: {
           flex: 1,
           backgroundColor: T.bg,
+        },
+        desktopFrameOuter: {
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingHorizontal: 16,
+          paddingVertical: 16,
+        },
+        desktopFrame: {
+          width: frameWidth,
+          flex: 1,
+          borderRadius: 20,
+          overflow: 'hidden',
+          borderWidth: 1,
+          borderColor: T.border,
+          backgroundColor: T.bg,
+          ...(Platform.OS === 'web'
+            ? {
+                boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
+              }
+            : null),
         },
         guestRibbon: {
           backgroundColor: T.surface,
@@ -190,7 +139,7 @@ function TapitHomeScreenInner({ showExitToDashboard = false, onExitToDashboard }
           borderBottomColor: T.border,
         },
         guestRibbonText: {
-          fontSize: 12,
+          fontSize: s(12),
           fontWeight: '600',
           color: T.muted,
           textAlign: 'center',
@@ -205,23 +154,50 @@ function TapitHomeScreenInner({ showExitToDashboard = false, onExitToDashboard }
           borderBottomColor: T.border,
         },
         exitBarText: {
-          fontSize: 16,
+          fontSize: s(16),
           fontWeight: '600',
           color: T.text,
         },
         listWrap: {
           flex: 1,
+          width: frameWidth,
+          alignSelf: 'center',
         },
         pageScroll: {
           flex: 1,
         },
         pageScrollContent: {
           flexGrow: 1,
-          paddingHorizontal: 20,
-          paddingTop: 12,
+          paddingHorizontal: isDesktopWeb ? 32 : 20,
+          paddingTop: isDesktopWeb ? 18 : 12,
         },
-      }),
-    [T],
+        nextWrap: {
+          paddingHorizontal: 16,
+          paddingTop: 6,
+          paddingBottom: 2,
+          alignItems: 'center',
+        },
+        nextBtn: {
+          minWidth: 120,
+          borderRadius: 999,
+          borderWidth: 1,
+          borderColor: T.border,
+          backgroundColor: T.surface,
+          paddingVertical: 10,
+          paddingHorizontal: 16,
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexDirection: 'row',
+          gap: 8,
+        },
+        nextBtnText: {
+          fontSize: s(14),
+          fontWeight: '700',
+          color: T.text,
+        },
+      });
+    },
+    [T, frameWidth, isDesktopWeb, preferences.textSizeLevel],
   );
 
   const lastPagerIndex = useRef(0);
@@ -235,7 +211,7 @@ function TapitHomeScreenInner({ showExitToDashboard = false, onExitToDashboard }
   const onMomentumScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const x = e.nativeEvent.contentOffset.x;
-      const idx = Math.round(x / pageWidth);
+      const idx = Math.round(x / frameWidth);
       const tab = TAPIT_TABS[idx];
       if (!tab) return;
       setActiveTab(tab);
@@ -246,7 +222,7 @@ function TapitHomeScreenInner({ showExitToDashboard = false, onExitToDashboard }
         }
       }
     },
-    [pageWidth],
+    [frameWidth],
   );
 
   const onTabFromNav = useCallback((tab: TapitTab) => {
@@ -255,12 +231,36 @@ function TapitHomeScreenInner({ showExitToDashboard = false, onExitToDashboard }
     lastPagerIndex.current = idx;
     listRef.current?.scrollToIndex({ index: idx, animated: true, viewPosition: 0 });
   }, []);
+  const onNext = useCallback(() => {
+    const idx = TAPIT_TABS.indexOf(activeTab);
+    const next = TAPIT_TABS[idx + 1];
+    if (!next) return;
+    onTabFromNav(next);
+  }, [activeTab, onTabFromNav]);
+
+  useEffect(() => {
+    if (!showExitToDashboard) return;
+    const idx = TAPIT_TABS.indexOf(activeTab);
+    if (idx < 0) return;
+    scrollX.value = idx * frameWidth;
+  }, [activeTab, frameWidth, scrollX, showExitToDashboard]);
+
+  const renderTabContent = useCallback(
+    (index: number) => {
+      if (index === 0) return <StoryPageChooseLink />;
+      if (index === 1) return <StoryPageServer />;
+      if (index === 2) return <StoryPageEmbed />;
+      if (index === 3) return <StoryPageShip />;
+      return <StoryPageTry onGoToShop={() => router.push('/shop')} />;
+    },
+    [],
+  );
 
   const renderItem = useCallback(
     ({ index }: { index: number }) => {
       const scrollContent = [styles.pageScrollContent, { paddingBottom: 24 + insets.bottom }];
       const page = (
-        <PagerPage index={index} scrollX={scrollX} width={pageWidth}>
+        <PagerPage index={index} scrollX={scrollX} width={frameWidth}>
           {index === 0 ? (
             <LinkStoryScrollView style={styles.pageScroll} contentContainerStyle={scrollContent}>
               <StoryPageChooseLink />
@@ -283,70 +283,102 @@ function TapitHomeScreenInner({ showExitToDashboard = false, onExitToDashboard }
       );
       return page;
     },
-    [insets.bottom, pageWidth, scrollX, styles.pageScroll, styles.pageScrollContent],
+    [frameWidth, insets.bottom, scrollX, styles.pageScroll, styles.pageScrollContent],
   );
 
   const getItemLayout = useCallback(
     (_data: ArrayLike<PageRow> | null | undefined, index: number) => ({
-      length: pageWidth,
-      offset: pageWidth * index,
+      length: frameWidth,
+      offset: frameWidth * index,
       index,
     }),
-    [pageWidth],
+    [frameWidth],
   );
 
   return (
     <SafeAreaView style={[styles.root, { paddingTop: insets.top }]} edges={['top']}>
-      {isGuest ? (
-        <View style={styles.guestRibbon}>
-          <Text style={styles.guestRibbonText}>{u.common.guestRibbon}</Text>
+      <View style={isDesktopWeb ? styles.desktopFrameOuter : { flex: 1 }}>
+        <View style={isDesktopWeb ? styles.desktopFrame : { flex: 1 }}>
+          {isGuest ? (
+            <View style={styles.guestRibbon}>
+              <Text style={styles.guestRibbonText}>{u.common.guestRibbon}</Text>
+            </View>
+          ) : null}
+          {showExitToDashboard && onExitToDashboard ? (
+            <Pressable
+              onPress={onExitToDashboard}
+              style={({ pressed }) => [styles.exitBar, pressed && { opacity: 0.75 }]}
+              accessibilityRole="button"
+              accessibilityLabel={u.onboarding.exitBarA11y}
+            >
+              <Ionicons name="chevron-back" size={22} color={T.text} />
+              <Text style={styles.exitBarText}>{u.onboarding.exitHome}</Text>
+            </Pressable>
+          ) : null}
+          <OnboardingPagerProvider value={{ scrollX, pageWidth: frameWidth }}>
+            <View style={styles.listWrap}>
+              {showExitToDashboard ? (
+                TAPIT_TABS.indexOf(activeTab) === 0 ? (
+                  <LinkStoryScrollView
+                    style={styles.pageScroll}
+                    contentContainerStyle={[styles.pageScrollContent, { paddingBottom: 24 + insets.bottom }]}
+                  >
+                    {renderTabContent(0)}
+                  </LinkStoryScrollView>
+                ) : (
+                  <ScrollView
+                    style={styles.pageScroll}
+                    contentContainerStyle={[styles.pageScrollContent, { paddingBottom: 24 + insets.bottom }]}
+                    showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
+                  >
+                    {renderTabContent(TAPIT_TABS.indexOf(activeTab))}
+                  </ScrollView>
+                )
+              ) : (
+                <Animated.FlatList
+                  ref={listRef}
+                  data={data}
+                  keyExtractor={(item) => item.key}
+                  renderItem={renderItem}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  onScroll={onScroll}
+                  scrollEventThrottle={16}
+                  keyboardShouldPersistTaps="handled"
+                  onMomentumScrollEnd={onMomentumScrollEnd}
+                  getItemLayout={getItemLayout}
+                  initialNumToRender={5}
+                  windowSize={5}
+                  decelerationRate="fast"
+                  onScrollToIndexFailed={(info) => {
+                    const wait = new Promise((r) => setTimeout(r, 100));
+                    void wait.then(() => {
+                      listRef.current?.scrollToIndex({ index: info.index, animated: false });
+                    });
+                  }}
+                />
+              )}
+            </View>
+          </OnboardingPagerProvider>
+          <View style={{ paddingBottom: insets.bottom }}>
+            {showExitToDashboard && TAPIT_TABS.indexOf(activeTab) < TAPIT_TABS.length - 1 ? (
+              <View style={styles.nextWrap}>
+                <Pressable
+                  onPress={onNext}
+                  style={({ pressed }) => [styles.nextBtn, pressed && { opacity: 0.75 }]}
+                  accessibilityRole="button"
+                  accessibilityLabel="Next step"
+                >
+                  <Text style={styles.nextBtnText}>Next</Text>
+                  <Ionicons name="arrow-forward" size={16} color={T.text} />
+                </Pressable>
+              </View>
+            ) : null}
+            <TapitBottomNav active={activeTab} onChange={onTabFromNav} />
+          </View>
         </View>
-      ) : null}
-      {showExitToDashboard && onExitToDashboard ? (
-        <Pressable
-          onPress={onExitToDashboard}
-          style={({ pressed }) => [styles.exitBar, pressed && { opacity: 0.75 }]}
-          accessibilityRole="button"
-          accessibilityLabel={u.onboarding.exitBarA11y}
-        >
-          <Ionicons name="chevron-back" size={22} color={T.text} />
-          <Text style={styles.exitBarText}>{u.onboarding.exitHome}</Text>
-        </Pressable>
-      ) : null}
-      <OnboardingPagerProvider value={{ scrollX, pageWidth }}>
-        <View style={styles.listWrap}>
-          <Animated.FlatList
-            ref={listRef}
-            data={data}
-            keyExtractor={(item) => item.key}
-            renderItem={renderItem}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={onScroll}
-            scrollEventThrottle={16}
-            keyboardShouldPersistTaps="handled"
-            onMomentumScrollEnd={onMomentumScrollEnd}
-            getItemLayout={getItemLayout}
-            initialNumToRender={5}
-            windowSize={5}
-            decelerationRate="fast"
-            onScrollToIndexFailed={(info) => {
-              const wait = new Promise((r) => setTimeout(r, 100));
-              void wait.then(() => {
-                listRef.current?.scrollToIndex({ index: info.index, animated: false });
-              });
-            }}
-          />
-        </View>
-      </OnboardingPagerProvider>
-      <View style={{ paddingBottom: insets.bottom }}>
-        <SwipeForNextHint
-          visible={TAPIT_TABS.indexOf(activeTab) < TAPIT_TABS.length - 1}
-          T={T}
-          swipeForNext={u.onboarding.swipeForNext}
-        />
-        <TapitBottomNav active={activeTab} onChange={onTabFromNav} />
       </View>
     </SafeAreaView>
   );

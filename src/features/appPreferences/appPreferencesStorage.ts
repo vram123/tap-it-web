@@ -9,12 +9,26 @@ function mergeStored(parsed: unknown): AppPreferencesState {
   const base = defaultAppPreferences();
   if (!parsed || typeof parsed !== 'object') return base;
   const o = parsed as Record<string, unknown>;
+  const textSizeLevel =
+    typeof o.textSizeLevel === 'number' && o.textSizeLevel >= 1 && o.textSizeLevel <= 5
+      ? (o.textSizeLevel as AppPreferencesState['textSizeLevel'])
+      : typeof o.largerText === 'boolean'
+        ? o.largerText
+          ? 4
+          : 3
+        : base.textSizeLevel;
   return {
     ...base,
     notificationsMuted: typeof o.notificationsMuted === 'boolean' ? o.notificationsMuted : base.notificationsMuted,
     useDataToImprove: typeof o.useDataToImprove === 'boolean' ? o.useDataToImprove : base.useDataToImprove,
+    shareCrashReports: typeof o.shareCrashReports === 'boolean' ? o.shareCrashReports : base.shareCrashReports,
+    allowPersonalizedContent:
+      typeof o.allowPersonalizedContent === 'boolean'
+        ? o.allowPersonalizedContent
+        : base.allowPersonalizedContent,
+    allowMarketingEmails: typeof o.allowMarketingEmails === 'boolean' ? o.allowMarketingEmails : base.allowMarketingEmails,
     reduceMotion: typeof o.reduceMotion === 'boolean' ? o.reduceMotion : base.reduceMotion,
-    largerText: typeof o.largerText === 'boolean' ? o.largerText : base.largerText,
+    textSizeLevel,
     locale: typeof o.locale === 'string' && isAppLocale(o.locale) ? o.locale : base.locale,
   };
 }

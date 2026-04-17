@@ -29,7 +29,8 @@ export default function SupportSettingsScreen() {
   const { colors } = useUserProfile();
   const { s } = useAppPreferences();
 
-  const mailto = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('TapIt support')}`;
+  const templateBody = `Hello, my name is ...\n\nI have a question/concern about ...`;
+  const mailto = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent('TapIt support')}&body=${encodeURIComponent(templateBody)}`;
 
   return (
     <SafeAreaView style={[styles.root, { backgroundColor: colors.bg }]} edges={['bottom']}>
@@ -39,7 +40,11 @@ export default function SupportSettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <PageContainer style={styles.pageInner}>
-        <Text style={[styles.lead, { color: colors.muted }]}>{s.supportLead}</Text>
+        <Text style={[styles.lead, { color: colors.muted }]}>
+          For any questions or concerns, please email us at {SUPPORT_EMAIL}.
+        </Text>
+
+        
 
         <Pressable
           onPress={() => void openExternal(mailto)}
@@ -77,6 +82,8 @@ const styles = StyleSheet.create({
   scroll: { paddingTop: 16 },
   pageInner: { paddingHorizontal: 20 },
   lead: { fontSize: 14, lineHeight: 20, marginBottom: 16 },
+  templateTitle: { fontSize: 13, fontWeight: '700', marginBottom: 6, textTransform: 'uppercase' },
+  templateBody: { fontSize: 14, lineHeight: 20, marginBottom: 16 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -9,7 +9,7 @@ import { useUserProfile } from '@/features/profile/UserProfileContext';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { router } from '@/lib/expo-router';
 import React from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 /** @types/react-native-vector-icons does not expose `glyphMap` on Ionicons; names match the bundled JSON map. */
@@ -54,16 +54,26 @@ export default function SettingsIndexScreen() {
   const { colors, resetProfileStorage } = useUserProfile();
   const { s } = useAppPreferences();
 
+  const runLogOut = async () => {
+    await clearAccessToken();
+    await resetProfileStorage();
+    router.replace('/login');
+  };
+
   const logOut = () => {
+    if (Platform.OS === 'web') {
+      const confirmed = window.confirm(`${s.logOutConfirmTitle}\n\n${s.logOutConfirmBody}`);
+      if (!confirmed) return;
+      void runLogOut();
+      return;
+    }
     Alert.alert(s.logOutConfirmTitle, s.logOutConfirmBody, [
       { text: s.cancel, style: 'cancel' },
       {
         text: s.logOut,
         style: 'destructive',
-        onPress: async () => {
-          await clearAccessToken();
-          await resetProfileStorage();
-          router.replace('/(auth)/login');
+        onPress: () => {
+          void runLogOut();
         },
       },
     ]);

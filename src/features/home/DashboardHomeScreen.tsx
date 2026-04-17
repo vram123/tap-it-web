@@ -10,6 +10,7 @@ import {
   MOCK_USER_STORIES,
 } from '@/constants/mockHomeData';
 import { useAppPreferences } from '@/features/appPreferences/AppPreferencesContext';
+import { scaleText, type TextSizeLevel } from '@/features/appPreferences/textSize';
 import type { AppThemeColors, ColorMode, UserNfcCard } from '@/features/profile/profileTypes';
 import { useUserProfile } from '@/features/profile/UserProfileContext';
 import type { MainTabKey } from '@/i18n/ui/types';
@@ -28,10 +29,11 @@ function paramToString(v: string | string[] | undefined): string | undefined {
   return undefined;
 }
 
-function createStyles(c: AppThemeColors, colorMode: ColorMode) {
+function createStyles(c: AppThemeColors, colorMode: ColorMode, textSizeLevel: TextSizeLevel) {
   const trackBg = colorMode === 'light' ? '#d4d4d8' : '#2a2a30';
   const accessoryTagBg = colorMode === 'light' ? '#e4e4e7' : '#27272f';
   const portfolioStub = colorMode === 'light' ? '#d4d4d8' : '#2a2a30';
+  const s = (size: number) => scaleText(size, textSizeLevel);
   return StyleSheet.create({
     root: { flex: 1, backgroundColor: c.bg },
     guestRibbon: {
@@ -42,12 +44,13 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       borderBottomColor: c.border,
     },
     guestRibbonText: {
-      fontSize: 12,
+      fontSize: s(12),
       fontWeight: '600',
       color: c.muted,
       textAlign: 'center',
     },
     scroll: { paddingTop: 8 },
+    pageWrap: { paddingHorizontal: 24 },
     topRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -63,7 +66,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       justifyContent: 'center',
       overflow: 'hidden',
     },
-    avatarText: { fontSize: 18, fontWeight: '700', color: c.onAccent },
+    avatarText: { fontSize: s(18), fontWeight: '700', color: c.onAccent },
     avatarImg: { width: '100%', height: '100%' },
     iconBtn: {
       width: 44,
@@ -76,8 +79,8 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       justifyContent: 'center',
     },
     pressed: { opacity: 0.75 },
-    welcome: { fontSize: 22, fontWeight: '700', color: c.text, marginBottom: 6 },
-    welcomeSub: { fontSize: 14, color: c.muted, marginBottom: 20, lineHeight: 20 },
+    welcome: { fontSize: s(22), fontWeight: '700', color: c.text, marginBottom: 6 },
+    welcomeSub: { fontSize: s(14), color: c.muted, marginBottom: 20, lineHeight: s(20) },
     journeyCta: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -97,8 +100,8 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       justifyContent: 'center',
     },
     journeyCtaTextCol: { flex: 1, gap: 4 },
-    journeyCtaTitle: { fontSize: 17, fontWeight: '800', color: '#0a0a0a' },
-    journeyCtaSub: { fontSize: 12, fontWeight: '500', color: 'rgba(10,10,10,0.55)', lineHeight: 16 },
+    journeyCtaTitle: { fontSize: s(17), fontWeight: '800', color: '#0a0a0a' },
+    journeyCtaSub: { fontSize: s(12), fontWeight: '500', color: 'rgba(10,10,10,0.55)', lineHeight: s(16) },
     storiesRow: { gap: 12, paddingBottom: 28, paddingRight: 8 },
     storyCard: {
       width: 292,
@@ -110,10 +113,10 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
     },
     storyIconRow: { marginBottom: 10 },
     storyQuote: {
-      fontSize: 15,
+      fontSize: s(15),
       fontWeight: '500',
       color: c.text,
-      lineHeight: 22,
+      lineHeight: s(22),
       marginBottom: 12,
     },
     storyTag: {
@@ -124,8 +127,8 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       borderRadius: 6,
     },
     storyTagText: { fontSize: 10, fontWeight: '700', color: c.muted, textTransform: 'uppercase' },
-    sectionTitle: { fontSize: 17, fontWeight: '700', color: c.text, marginBottom: 6 },
-    sectionHint: { fontSize: 13, color: c.muted, marginBottom: 14, lineHeight: 18 },
+    sectionTitle: { fontSize: s(17), fontWeight: '700', color: c.text, marginBottom: 6 },
+    sectionHint: { fontSize: s(13), color: c.muted, marginBottom: 14, lineHeight: s(18) },
     analyticsCard: {
       backgroundColor: c.surface,
       borderRadius: 14,
@@ -136,15 +139,15 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
     },
     analyticsRow: { flexDirection: 'row', marginBottom: 18 },
     analyticsStat: { flex: 1 },
-    analyticsValue: { fontSize: 28, fontWeight: '800', color: c.text },
-    analyticsValueSmall: { fontSize: 15, fontWeight: '700', color: c.text, lineHeight: 20 },
-    analyticsLabel: { fontSize: 12, color: c.muted, marginTop: 4 },
-    analyticsPeriod: { fontSize: 11, color: c.muted, marginTop: 2 },
+    analyticsValue: { fontSize: s(28), fontWeight: '800', color: c.text },
+    analyticsValueSmall: { fontSize: s(15), fontWeight: '700', color: c.text, lineHeight: s(20) },
+    analyticsLabel: { fontSize: s(12), color: c.muted, marginTop: 4 },
+    analyticsPeriod: { fontSize: s(11), color: c.muted, marginTop: 2 },
     analyticsDivider: { width: 1, backgroundColor: c.border, marginHorizontal: 12 },
-    deviceTitle: { fontSize: 12, fontWeight: '600', color: c.muted, marginBottom: 10 },
+    deviceTitle: { fontSize: s(12), fontWeight: '600', color: c.muted, marginBottom: 10 },
     deviceBars: { gap: 8 },
     deviceRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-    deviceLabel: { width: 64, fontSize: 12, color: c.muted },
+    deviceLabel: { width: 64, fontSize: s(12), color: c.muted },
     deviceTrack: {
       flex: 1,
       height: 6,
@@ -153,7 +156,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       overflow: 'hidden',
     },
     deviceFill: { height: '100%', backgroundColor: c.accent, borderRadius: 3 },
-    devicePct: { width: 32, fontSize: 12, color: c.text, textAlign: 'right' },
+    devicePct: { width: 32, fontSize: s(12), color: c.text, textAlign: 'right' },
     chipRow: { gap: 8, paddingBottom: 20 },
     chip: {
       paddingHorizontal: 14,
@@ -163,7 +166,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       borderWidth: 1,
       borderColor: c.border,
     },
-    chipText: { fontSize: 13, fontWeight: '600', color: c.text },
+    chipText: { fontSize: s(13), fontWeight: '600', color: c.text },
     cardsRow: { gap: 14, paddingBottom: 12, paddingRight: 8 },
     nfcCard: {
       width: 168,
@@ -187,7 +190,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       marginBottom: 28,
       paddingVertical: 6,
     },
-    addCardGhostText: { fontSize: 15, fontWeight: '600', color: c.accent },
+    addCardGhostText: { fontSize: s(15), fontWeight: '600', color: c.accent },
     accessoryRow: { gap: 12, paddingBottom: 28, paddingRight: 8 },
     accessoryCard: {
       width: 156,
@@ -206,8 +209,8 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       marginBottom: 10,
     },
     accessoryTagText: { fontSize: 10, fontWeight: '700', color: c.muted, textTransform: 'uppercase' },
-    accessoryTitle: { fontSize: 15, fontWeight: '700', color: c.text, marginBottom: 4 },
-    accessoryPrice: { fontSize: 13, color: c.muted, marginBottom: 12 },
+    accessoryTitle: { fontSize: s(15), fontWeight: '700', color: c.text, marginBottom: 4 },
+    accessoryPrice: { fontSize: s(13), color: c.muted, marginBottom: 12 },
     accessoryBtn: {
       borderWidth: 1,
       borderColor: c.border,
@@ -215,7 +218,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       paddingVertical: 8,
       alignItems: 'center',
     },
-    accessoryBtnText: { fontSize: 13, fontWeight: '600', color: c.text },
+    accessoryBtnText: { fontSize: s(13), fontWeight: '600', color: c.text },
     roadmapGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -263,7 +266,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       padding: 16,
       marginBottom: 24,
     },
-    leadCardTitle: { fontSize: 16, fontWeight: '600', color: c.text, marginBottom: 12 },
+    leadCardTitle: { fontSize: s(16), fontWeight: '600', color: c.text, marginBottom: 12 },
     leadField: { marginBottom: 4 },
     leadCta: {
       marginTop: 12,
@@ -272,7 +275,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       borderRadius: 8,
       alignItems: 'center',
     },
-    leadCtaText: { fontSize: 16, fontWeight: '600', color: c.onAccent },
+    leadCtaText: { fontSize: s(16), fontWeight: '600', color: c.onAccent },
     securityNote: {
       flexDirection: 'row',
       gap: 12,
@@ -284,7 +287,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       padding: 14,
       marginBottom: 8,
     },
-    securityNoteText: { flex: 1, fontSize: 13, color: c.muted, lineHeight: 18 },
+    securityNoteText: { flex: 1, fontSize: s(13), color: c.muted, lineHeight: s(18) },
     bottomNav: {
       position: 'absolute',
       left: 0,
@@ -299,7 +302,7 @@ function createStyles(c: AppThemeColors, colorMode: ColorMode) {
       borderTopColor: c.border,
     },
     tabItem: { alignItems: 'center', gap: 4, minWidth: 56 },
-    tabLabel: { fontSize: 10, color: c.muted, fontWeight: '500' },
+    tabLabel: { fontSize: s(10), color: c.muted, fontWeight: '500' },
     tabLabelActive: { color: c.text, fontWeight: '700' },
     emptyActiveCards: {
       backgroundColor: c.surface,
@@ -334,7 +337,7 @@ export default function DashboardHomeScreen() {
   const guestRaw = (paramToString(raw.guest) || '').toLowerCase();
   const isGuest = guestRaw === '1' || guestRaw === 'true' || guestRaw === 'yes';
 
-  const { u } = useAppPreferences();
+  const { u, preferences } = useAppPreferences();
   const { profile, colors, setProfile, hydrated, myCards } = useUserProfile();
   const seededDisplay = useRef(false);
 
@@ -365,8 +368,8 @@ export default function DashboardHomeScreen() {
   }, [raw.guest, raw.displayName, isGuest, profile.displayName]);
 
   const styles = useMemo(
-    () => createStyles(colors, profile.colorMode),
-    [colors, profile.colorMode],
+    () => createStyles(colors, profile.colorMode, preferences.textSizeLevel),
+    [colors, profile.colorMode, preferences.textSizeLevel],
   );
 
   const tf = {
@@ -434,7 +437,7 @@ export default function DashboardHomeScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <WebMaxWidth style={{ paddingHorizontal: 20 }}>
+        <WebMaxWidth maxWidth={1200} style={styles.pageWrap}>
         <View style={styles.topRow}>
           <Pressable
             onPress={goProfile}
