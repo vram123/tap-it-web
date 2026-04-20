@@ -2,7 +2,7 @@
 // testing and review April 18, 2026
 // needs more languages, got the basics but for diversity I need more 
 // also we gotta add a button that user can tell us from their opinion about the language  transaltion rate
-// if their desired language did a poor job on transalting a specific portion, we can fix that from their feedback
+// if their desired language did a poor job on transalting a specific portion, we can fix that from their feedback 
 
 import { PageContainer } from '@/components/WebMaxWidth';
 import { SettingsSubpageHeader } from '@/components/SettingsSubpageHeader';
