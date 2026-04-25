@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
   // Do not list `react-native` here: Next SWC cannot parse RN 0.81 Flow; Babel handles it below.
   transpilePackages: [
-    'react-native-web',
+    'react-native-web', 
     'react-native-safe-area-context',
     '@react-native-async-storage/async-storage',
     'react-native-reanimated',
