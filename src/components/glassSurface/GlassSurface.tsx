@@ -1,7 +1,7 @@
 'use client';
 
 // tested page april 24
-// perforamce slower on web then on expo 
+// perforamce slower on web then on expo
 
 import React, { useCallback, useEffect, useRef, useState, useId } from 'react';
 import './GlassSurface.css';
