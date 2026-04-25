@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import webpack from 'webpack';
+import webpack from 'webpack'; 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const hapticsShim = path.join(__dirname, 'src/shims/expo-haptics.ts');
