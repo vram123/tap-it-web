@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
     '@react-native-async-storage/async-storage',
     'react-native-reanimated',
     'react-native-worklets',
-    'react-native-vector-icons',
+    'react-native-vector-icons', 
   ],
   webpack: (config) => {
     // Prefer platform builds (e.g. reanimated findHostInstance.web.js) over native RN internals.
