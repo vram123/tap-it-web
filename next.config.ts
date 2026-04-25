@@ -6,7 +6,7 @@ import webpack from 'webpack';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const hapticsShim = path.join(__dirname, 'src/shims/expo-haptics.ts');
 
-const nextConfig: NextConfig = {
+const nextConfig: NextConfig = { 
   reactStrictMode: true,
   outputFileTracingRoot: path.join(__dirname),
   // Do not list `react-native` here: Next SWC cannot parse RN 0.81 Flow; Babel handles it below.
